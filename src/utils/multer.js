@@ -5,7 +5,12 @@ const AWS = require('aws-sdk');
 const uploadFile=async(req,res)=>{
 
     try{
+        if(!req.file){
+            throw new Error ('Please upload a file!')
+        }
+
         const file = req.file;
+        console.log(req.file)
         const fileType=req.fileType;
 
         //Configurations for the s3-bucket
@@ -30,7 +35,7 @@ const uploadFile=async(req,res)=>{
 
             return res.status(400).send({
                 status:400,
-                Message:s3Err.message || "Unable to upload File.Try again"
+                message:s3Err.message || "Unable to upload File.Try again"
             })
          }
          else{
@@ -38,7 +43,7 @@ const uploadFile=async(req,res)=>{
             return res.status(200).send({
 
                 status:200,
-                Message:"File uploaded successfully",
+                message:"File uploaded successfully",
                 File_URL:data.Location
             })
             
@@ -48,9 +53,10 @@ const uploadFile=async(req,res)=>{
     }
     catch(err)
     {
+        console.log(err)
         res.status(500).send({
             status:500,
-            Message:err.message || 'Due to technical issues something went wrong.Try again'
+            message:err.message || 'Due to technical issues something went wrong.Try again'
         })
     }
 
