@@ -76,13 +76,26 @@ const getAllPosts = async(req,res)=>{
 
 const community = async(req,res)=>{
     try{
+        var page = parseInt(req.query.page)
+        var size = parseInt(req.query.size)
+        if (!page) {
+            page = 1
+        }
+        if (!size) {
+            size = 5
+        }
+        var query = {}
+        query.skip = size * (page - 1)
+        query.limit = size
+        query.page = page
+
         const friendsOne= await Friend.find({owner : req._id})
         const friendsTwo = await Friend.find({reciever : req._id})
         let resultOne = friendsOne.map(a => a.reciever);
         let resultwo = friendsTwo.map(b => b.owner)
         let result = [...resultOne,...resultwo]
 
-        const users = await Posts.find({ postedBy: { $in: result }}).populate('postedBy',{name:1})
+        const users = await Posts.find({ postedBy: { $in: result }}).populate('postedBy',{name:1}).limit(query.limit).skip(query.skip)
         res.status(200).send({
             status:200,
             message: "Success",
