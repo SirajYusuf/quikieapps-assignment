@@ -2,6 +2,8 @@ const express = require('express')
 const router = new express.Router()
 const {register, login, getUsers, addFriend, acceptRequest, getFriends, friendRequests, Suggestions, rejectRequest, removeFriend} = require('../controller/userController')
 const {addPost, myPosts, getAllPosts, community, deletePost} = require('../controller/postController')
+const {createSalon,getSalons} = require('../controller/salonController')
+const {createEmployee} = require('../controller/employeeController')
 const auth = require('../middleware/auth')
 
 //user routes
@@ -34,7 +36,7 @@ const upload = multer({ storage: storage }).single('file');
 
 
 //post routes
-router.post('/uploadFile',auth,upload,uploadFile)
+// router.post('/uploadFile',auth,upload,uploadFile)
 
 
 router.post('/myProfile/addPost',auth,addPost)
@@ -47,5 +49,8 @@ router.get('/community',auth,community)
 //personal
 router.get('/getUsers',getUsers)
 router.get('/getAllPosts',auth,getAllPosts)
+router.post('/createSalon',createSalon)
+router.get('/getSalons',getSalons)
+router.post('/createEmployee',createEmployee)
 
 module.exports = router
